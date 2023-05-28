@@ -7,8 +7,6 @@ import base64
 import io
 from cdifflib import CSequenceMatcher
 import string
-import os
-import tempfile
 
 app = Flask(__name__)
 CORS(app)
@@ -27,17 +25,8 @@ def calculate_audio_similarity():
         original_audio_arr.append(temp)
     plagiarizedAudio = base64.b64decode(plagiarized_audio)
     
-    # Save the plagiarized audio data to a temporary file
-    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-        temp_file.write(plagiarizedAudio)
-        temp_filepath = temp_file.name
-    
-    plagiarizedAudioData, plagiarized_sr = librosa.load(temp_filepath, sr=None)
-    print(plagiarizedAudioData)
-    
-    # Delete the temporary file
-    os.remove(temp_filepath)
-    
+    plagiarizedAudioData, plagiarized_sr = librosa.load(io.BytesIO(plagiarizedAudio), sr=None)
+    print (plagiarizedAudioData)
     res = {}
 
     for originalAudio in original_audio_arr:
@@ -51,6 +40,7 @@ def calculate_audio_similarity():
             res[original_audio_arr.index(originalAudio)] = int(similarity[0][0])
 
     return jsonify(res)
+
 @app.route('/text_similarity', methods=['POST'])
 def check_plagiarism():
     # Get the JSON data from the request
