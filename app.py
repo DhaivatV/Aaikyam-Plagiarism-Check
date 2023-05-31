@@ -13,7 +13,7 @@ CORS(app)
 
 @app.route('/', methods=['GET'])
 def index():
-    return({"Hello World!!})
+    return({"Hello World!!"})
 @app.route('/audio_similarity', methods=['POST'])
 def calculate_audio_similarity():
     # Get the JSON data from the request
