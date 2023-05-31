@@ -11,6 +11,9 @@ import string
 app = Flask(__name__)
 CORS(app)
 
+@app.route('/', methods=['GET'])
+def index():
+    return({"Hello World!!})
 @app.route('/audio_similarity', methods=['POST'])
 def calculate_audio_similarity():
     # Get the JSON data from the request
